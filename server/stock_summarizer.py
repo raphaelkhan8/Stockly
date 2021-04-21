@@ -1,10 +1,13 @@
 # 1. Install and Import Baseline Dependencies
 from transformers import PegasusTokenizer, PegasusForConditionalGeneration
 from bs4 import BeautifulSoup
-import requests
-import re
 from transformers import pipeline
-import csv
+import sys, json, csv, re, requests
+
+def read_in():
+    lines = sys.stdin.readlines()
+    #Since our input would only be having one line, parse our JSON data from that
+    return json.loads(lines[0])
 
 # 2. Setup Model
 model_name = "human-centered-summarization/financial-summarization-pegasus"
@@ -12,7 +15,9 @@ tokenizer = PegasusTokenizer.from_pretrained(model_name)
 model = PegasusForConditionalGeneration.from_pretrained(model_name)
 
 # 3. Setup Pipeline
-monitored_tickers = ['ETH']
+monitored_tickers = ['DOGE']
+# print('TICKER SYMBOL: ', sys.argv[1])
+# monitored_tickers = [sys.argv[1]]
 
 # 4.1. Search for Stock News using Google and Yahoo Finance
 print('Searching for stock news for', monitored_tickers)
@@ -87,6 +92,8 @@ def create_output_array(summaries, scores, urls):
                           ]
             output.append(output_this)
     return output
+    print(output)
+    sys.stdout.flush()
 final_output = create_output_array(summaries, scores, cleaned_urls)
 final_output.insert(0, ['Ticker','Summary', 'Sentiment', 'Sentiment Score', 'URL'])
 
