@@ -3,20 +3,18 @@ const { spawn } = require('child_process');
 const app = express();
 const port = 3000;
 
-// const process = spawn('python', ['./test.py', 'Hello', 'World']);
-// process.stdout.on('data', (data) => console.log(data.toString()));
-
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-app.get('/symbol', (req, res) => {
-    console.log("HITTTTT");
+app.get('/stock/:ticker', (req, res) => {
+    const { ticker } = req.params
+    console.log(ticker);
     let dataToSend;
     // spawn new child process to call the python script
-    const python = spawn('python', ['./test.py', 'DOGE', 'ETH']);
+    const python = spawn('python', ['./stock_summarizer.py', ticker]);
     // collect data from script
-    python.stdout.on('data', function (data) {
+    python.stdout.on('data', (data) => {
         console.log('Pipe data from python script ...');
         dataToSend = data.toString();
         console.log(dataToSend);

@@ -4,20 +4,14 @@ from bs4 import BeautifulSoup
 from transformers import pipeline
 import sys, json, csv, re, requests
 
-def read_in():
-    lines = sys.stdin.readlines()
-    #Since our input would only be having one line, parse our JSON data from that
-    return json.loads(lines[0])
-
 # 2. Setup Model
 model_name = "human-centered-summarization/financial-summarization-pegasus"
 tokenizer = PegasusTokenizer.from_pretrained(model_name)
 model = PegasusForConditionalGeneration.from_pretrained(model_name)
 
 # 3. Setup Pipeline
-monitored_tickers = ['DOGE']
-# print('TICKER SYMBOL: ', sys.argv[1])
-# monitored_tickers = [sys.argv[1]]
+print('TICKER SYMBOL: ', sys.argv[1])
+monitored_tickers = [sys.argv[1]]
 
 # 4.1. Search for Stock News using Google and Yahoo Finance
 print('Searching for stock news for', monitored_tickers)
@@ -53,7 +47,7 @@ def scrape_and_process(URLs):
         soup = BeautifulSoup(r.text, 'html.parser')
         results = soup.find_all('p')
         text = [res.text for res in results]
-        words = ' '.join(text).split(' ')[:350]
+        words = ' '.join(text).split(' ')[:345]
         ARTICLE = ' '.join(words)
         ARTICLES.append(ARTICLE)
     return ARTICLES
