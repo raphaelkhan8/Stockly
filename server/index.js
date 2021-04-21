@@ -3,27 +3,23 @@ const { spawn } = require('child_process');
 const app = express();
 const port = 3000;
 
+async function callToPythonAsync(file, args) {
+    let p = spawn('python', [file, args]);
+    for await (const data of p.stdout) {
+        return data
+    }
+}
+
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
 app.get('/stock/:ticker', (req, res) => {
-    const { ticker } = req.params
-    console.log(ticker);
-    let dataToSend;
-    // spawn new child process to call the python script
-    const python = spawn('python', ['./stock_summarizer.py', ticker]);
-    // collect data from script
-    python.stdout.on('data', (data) => {
-        console.log('Pipe data from python script ...');
-        dataToSend = data.toString();
-        console.log(dataToSend);
-    });
-    // in close event we are sure that stream from child process is closed
-    python.on('close', (code) => {
-        console.log(`child process close all stdio with code ${code}`);
-        // send data to browser
-        res.send(dataToSend);
+    const { ticker } = req.params;
+    callToPythonAsync('./stock_summarizer.py', ticker).then(data => { 
+        const stringifiedData = data.toString();
+        console.log("=======================================================", stringifiedData);
+        res.send(stringifiedData);
     });
 })
 
