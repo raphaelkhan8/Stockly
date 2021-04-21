@@ -10,7 +10,6 @@ tokenizer = PegasusTokenizer.from_pretrained(model_name)
 model = PegasusForConditionalGeneration.from_pretrained(model_name)
 
 # 3. Setup Pipeline
-print('TICKER SYMBOL: ', sys.argv[1])
 monitored_tickers = [sys.argv[1]]
 
 # 4.1. Search for Stock News using Google and Yahoo Finance
@@ -90,9 +89,10 @@ def create_output_array(summaries, scores, urls):
     sys.stdout.flush()
 final_output = create_output_array(summaries, scores, cleaned_urls)
 final_output.insert(0, ['Ticker','Summary', 'Sentiment', 'Sentiment Score', 'URL'])
+print(final_output)
 
-csv_file_name = monitored_tickers[0] + 'summaries.csv'
+# csv_file_name = monitored_tickers[0] + 'summaries.csv'
 
-with open(csv_file_name, mode='w', newline='') as f:
-    csv_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    csv_writer.writerows(final_output)
+# with open(csv_file_name, mode='w', newline='') as f:
+#     csv_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+#     csv_writer.writerows(final_output)
