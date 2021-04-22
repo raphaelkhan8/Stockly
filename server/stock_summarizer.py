@@ -13,7 +13,7 @@ model = PegasusForConditionalGeneration.from_pretrained(model_name)
 monitored_tickers = [sys.argv[1]]
 
 # 4.1. Search for Stock News using Google and Yahoo Finance
-print('Searching for stock news for', monitored_tickers)
+# print('Searching for stock news for', monitored_tickers)
 def search_for_stock_news_links(ticker):
     search_url = 'https://www.google.com/search?q=yahoo+finance+{}&tbm=nws'.format(ticker)
     r = requests.get(search_url)
@@ -25,7 +25,7 @@ def search_for_stock_news_links(ticker):
 raw_urls = {ticker:search_for_stock_news_links(ticker) for ticker in monitored_tickers}
 
 # 4.2. Strip out unwanted URLs
-print('Cleaning URLs.')
+# print('Cleaning URLs.')
 exclude_list = ['maps', 'policies', 'preferences', 'accounts', 'support']
 def strip_unwanted_urls(urls, exclude_list):
     val = []
@@ -38,7 +38,7 @@ def strip_unwanted_urls(urls, exclude_list):
 cleaned_urls = {ticker:strip_unwanted_urls(raw_urls[ticker] , exclude_list) for ticker in monitored_tickers}
 
 # 4.3. Search and Scrape Cleaned URLs
-print('Scraping news links.')
+# print('Scraping news links.')
 def scrape_and_process(URLs):
     ARTICLES = []
     for url in URLs:
@@ -53,7 +53,7 @@ def scrape_and_process(URLs):
 articles = {ticker:scrape_and_process(cleaned_urls[ticker]) for ticker in monitored_tickers}
 
 # 4.4. Summarise all Articles
-print('Summarizing articles.')
+# print('Summarizing articles.')
 def summarize(articles):
     summaries = []
     for article in articles:
@@ -66,12 +66,12 @@ def summarize(articles):
 summaries = {ticker:summarize(articles[ticker]) for ticker in monitored_tickers}
 
 # 5. Adding Sentiment Analysis
-print('Calculating sentiment.')
+# print('Calculating sentiment.')
 sentiment = pipeline("sentiment-analysis")
 scores = {ticker:sentiment(summaries[ticker]) for ticker in monitored_tickers}
 
 # # 6. Exporting Results
-print('Exporting results')
+# print('Exporting results')
 def create_output_array(summaries, scores, urls):
     output = []
     for ticker in monitored_tickers:
