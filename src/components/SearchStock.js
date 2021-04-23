@@ -1,17 +1,17 @@
 import { useState } from 'react'
 
-const AddStock = ({ onAdd }) => {
-  const [text, setText] = useState('')
+const SearchStock = ({ searchStock }) => {
+  const [ticker, setText] = useState('')
 
   const onSubmit = (e) => {
     e.preventDefault()
 
-    if (!text) {
+    if (!ticker) {
       alert('Please enter a ticker symbol')
       return
     }
 
-    onAdd({ text })
+    searchStock({ ticker })
 
     setText('')
   }
@@ -23,7 +23,7 @@ const AddStock = ({ onAdd }) => {
         <input
           type='text'
           placeholder='Stock or Cryto ticker symbol'
-          value={text}
+          value={ticker}
           onChange={(e) => setText(e.target.value)}
         />
       </div>
@@ -33,4 +33,4 @@ const AddStock = ({ onAdd }) => {
   )
 }
 
-export default AddStock
+export default SearchStock
