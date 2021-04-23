@@ -1,11 +1,16 @@
 import Stock from './Stocks'
 
-const Stocks = ({ stocks, onDelete, onToggle }) => {
+const Stocks = ({ stocks, articles, onDelete }) => {
   return (
     <>
-      {stocks.map((stock, index) => (
-        <Stock key={index} stock={stock} onDelete={onDelete} onToggle={onToggle} />
+      {console.log(articles)}
+      {articles.map((article, index) => (
+        <Stock key={index} article={article} onDelete={onDelete} />
       ))}
+      {/* {console.log(stocks)};
+      {stocks.map((stock, index) => (
+        <Stock key={index} stock={stock} onDelete={onDelete} />
+      ))} */}
     </>
   )
 }
