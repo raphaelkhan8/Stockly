@@ -5,20 +5,35 @@ import Footer from './components/Footer'
 import Stocks from './components/Stocks'
 import SearchStock from './components/SearchStock'
 import About from './components/About'
-const amqp = require('amqplib/callback_api');
+import socketIoClient from 'socket.io-client'
+let socket;
 
 const App = () => {
   const [showAddStock, setShowAddStock] = useState(false)
   const [stocks, setStocks] = useState([])
-  const [articles, setArticles] = useState([])
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const getStocks = async () => {
-      const stocksFromServer = await fetchStocks()
-      setStocks(stocksFromServer)
-    }
-    getStocks()
-  }, [])
+      let articles = [];
+      socket = socketIoClient("http://127.0.0.1:3001");
+      socket.on("data-ready", (data) => {
+        setLoading(false)
+        const parsedArrayData = JSON.parse(data);
+        parsedArrayData.forEach(article => {
+          let obj = {};
+          obj.id = Math.floor(Math.random() * 10000) + 1
+          obj.symbol = article[0];
+          obj.summary = article[1];
+          obj.sentiment = article[2];
+          obj.score = article[3];
+          obj.url = article[4];
+          console.log(obj);
+          articles.push(obj);
+        });
+        setArticles(articles);
+      });
+  }, []);
 
   // Fetch All Stocks
   const fetchStocks = async () => {
@@ -38,25 +53,8 @@ const App = () => {
   // Send ticker to back-end
   const searchStock = async ({ ticker }) => {
     console.log(ticker);
-    const res = await fetch(`http://localhost:3001/stock/${ticker}`, {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json',
-      },
-    })
-    const data = await res.json();
-    console.log(data);
-    res.send(data);
-    // let data = {}
-    // data.id = 1;
-    // data.symbol = 'BTC';
-    // data.summary = 'Thodex was trading more than $585 million before shutting down. CEO Mehmet has gone missing, reports CoinDesk';
-    // data.sentiment = 'NEGATIVE';
-    // data.score = 0.9995017647;
-    // data.url = 'https://finance.yahoo.com/news/turkish-state-news-reports-crypto-124511311.html';
-
-    // setArticles([...articles, data]);
-    // console.log('ART: ', articles);
+    setLoading(true);
+    socket.emit("data-fetch", ticker);
   }
 
   // Add Stock
@@ -83,7 +81,7 @@ const App = () => {
     const res = await fetch(`http://localhost:3001/stocks/${id}`, {
       method: 'DELETE',
     })
-    //We should control the response status to decide if we will change the state or not.
+    // Controls the response status to decide if state will be changed or not.
     res.status === 200
       ? setStocks(stocks.filter((stock) => stock.id !== id))
       : alert('Error Deleting This Stock Article')
@@ -101,7 +99,7 @@ const App = () => {
           exact
           render={(props) => (
             <>
-              {showAddStock && <SearchStock searchStock={searchStock} />}
+              {showAddStock && <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} />}
               {(stocks.length > 0 || articles.length > 0) ? (
                 <Stocks
                   stocks={stocks}
