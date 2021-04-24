@@ -33,7 +33,7 @@ const SearchStock = ({ searchStock, loading }) => {
 
       <button type='submit' 
         className='btn btn-block' > {loading ?
-          (<Spinner animation="border" variant="info" role="status"><span className="sr-only">
+          (<Spinner animation="border" variant="light" role="status"><span className="sr-only">
             <TextLoop interval={20000}>
               <div>Searching for stock news...</div>
               <div>Scraping news links...</div>
