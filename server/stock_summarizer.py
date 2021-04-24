@@ -3,6 +3,7 @@ from transformers import PegasusTokenizer, PegasusForConditionalGeneration
 from bs4 import BeautifulSoup
 from transformers import pipeline
 import sys, json, csv, re, requests
+import json
 
 # 2. Setup Model
 model_name = "human-centered-summarization/financial-summarization-pegasus"
@@ -77,18 +78,17 @@ def create_output_array(summaries, scores, urls):
     for ticker in monitored_tickers:
         for counter in range(len(summaries[ticker])):
             output_this = [
-                            ticker,
-                            summaries[ticker][counter],
-                            scores[ticker][counter]['label'],
-                            scores[ticker][counter]['score'],
-                            urls[ticker][counter]
-                          ]
+                ticker,
+                summaries[ticker][counter],
+                str(scores[ticker][counter]['label']),
+                scores[ticker][counter]['score'],
+                urls[ticker][counter]
+            ]               
             output.append(output_this)
-    return output
-    print(output)
+    return json.dumps(output)
+    print(json.dumps(output))
     sys.stdout.flush()
 final_output = create_output_array(summaries, scores, cleaned_urls)
-final_output.insert(0, ['Ticker','Summary', 'Sentiment', 'Sentiment Score', 'URL'])
 print(final_output)
 
 # csv_file_name = monitored_tickers[0] + 'summaries.csv'
