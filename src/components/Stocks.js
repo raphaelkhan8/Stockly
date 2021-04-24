@@ -1,15 +1,16 @@
-import { FaTimes } from 'react-icons/fa'
+import { FaSave } from 'react-icons/fa'
 
-const Stocks = ({ stocks, articles, onDelete }) => {
+const Stocks = ({ articles, addStock }) => {
   return (
     <>
       {articles.map((article, index) => (
         <div className='stock'>
         <h3>
           Ticker: {article.symbol.toUpperCase()}{' '}
-          <FaTimes
-            style={{ color: 'red', cursor: 'pointer' }}
-            onClick={() => onDelete(article.id)}
+          <FaSave
+            style={{ color: 'green', cursor: 'pointer' }}
+            title="Save"
+            onClick={() => addStock(article)}
           />
         </h3>
         <p><b>Summary:</b> {article.summary}</p>
