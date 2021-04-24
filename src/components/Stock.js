@@ -3,7 +3,6 @@ import { FaTimes } from 'react-icons/fa'
 const Stock = ({ article, stock, onDelete }) => {
   return (
     <div>
-      {console.log('BART', article)}
       <h3>
         {article.symbol}{' '}
         <FaTimes
@@ -16,19 +15,6 @@ const Stock = ({ article, stock, onDelete }) => {
       <p>{article.score}</p>
       <p>{article.url}</p>
     </div>
-    // <div
-    //   className={`stock ${stock.reminder ? 'reminder' : ''}`}
-    //   onDoubleClick={() => onToggle(stock.id)}
-    // >
-    //   <h3>
-    //     {stock.text}{' '}
-    //     <FaTimes
-    //       style={{ color: 'red', cursor: 'pointer' }}
-    //       onClick={() => onDelete(stock.id)}
-    //     />
-    //   </h3>
-    //   <p>{stock.day}</p>
-    // </div>
   )
 }
 
