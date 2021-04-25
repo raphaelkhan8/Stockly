@@ -1,16 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import Header from './Header'
-import Stocks from './Stocks'
+import Login from './Login'
+import Signup from './Signup'
+import Articles from './Articles'
+import UserArticles from './UserArticles'
 import SearchStock from './SearchStock'
 import socketIoClient from 'socket.io-client'
 let socket;
 
 const HomePage = () => {
 
-    const [showAddStock, setShowAddStock] = useState(false)
-    const [stocks, setStocks] = useState([])
-    const [articles, setArticles] = useState([]);
+    const [userId, setUserId] = useState('');
+    const [showSignUp, setSignUpView] = useState(false); 
+    const [showAddStock, setShowAddStock] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [userArticles, setUserArticles] = useState([]);
+    const [articles, setArticles] = useState([]);
   
     useEffect(() => {
       (()=> {
@@ -19,9 +24,9 @@ const HomePage = () => {
         socket.on("data-ready", (data) => {
           setLoading(false)
           const parsedArrayData = JSON.parse(data);
-          parsedArrayData.forEach(article => {
+          parsedArrayData.forEach((article, i) => {
             let obj = {};
-            obj.id = Math.floor(Math.random() * 10000) + 1
+            obj.id = i++;
             obj.symbol = article[0];
             obj.summary = article[1];
             obj.sentiment = article[2];
@@ -34,73 +39,65 @@ const HomePage = () => {
         });
       })()
     }, []);
-  
-    // Fetch All Stocks
-    const fetchStocks = async () => {
-      const res = await fetch('http://localhost:3001/stocks')
-      const data = await res.json()
-      return data;
+
+    const saveUser = async (userInfo) => {
+      console.log("SAVE user info", userInfo);
+      socket.emit("user-save", userInfo);
     }
   
-    // Fetch Stock by id
-    const fetchStock = async (id) => {
-      const res = await fetch(`http://localhost:3001/stocks/${id}`)
-      const data = await res.json()
-  
-      return data
+    // Fetch All User's Stocks
+    const fetchStocks = async (userId) => {
+      console.log("FETCH user's articles", userId);
+      socket.emit("userStocks-fetch", userId);
     }
   
     // Send ticker to back-end
     const searchStock = async ({ ticker }) => {
-      console.log(ticker);
+      console.log("SEARCH ticker", ticker);
       setLoading(true);
       socket.emit("data-fetch", ticker);
     }
   
-    // Add Stock
-    const addStock = async (stock) => {
-      const res = await fetch('http://localhost:3001/stocks', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify(stock),
-      })
-  
-      const data = await res.json()
-  
-      setStocks([...stocks, data])
-  
+    // Add Article
+    const addArticle = async (articleInfo) => {
+      console.log("SAVE article", articleInfo);
+      socket.emit("article-save", articleInfo);
     }
   
     // Delete Stock
-    const deleteStock = async (id) => {
-      const res = await fetch(`http://localhost:3001/stocks/${id}`, {
-        method: 'DELETE',
-      })
-      // Controls the response status to decide if state will be changed or not.
-      res.status === 200
-        ? setStocks(stocks.filter((stock) => stock.id !== id))
-        : alert('Error Deleting This Stock Article')
+    const deleteArticle = async (id) => {
+      console.log("DELETE id", id);
+      socket.emit("delete-article", id);
     }
+
     return (
       <>
-       <Header
-            onAdd={() => setShowAddStock(!showAddStock)}
-            showAdd={showAddStock}
-          />
-        {showAddStock && <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} />}
-        {
+      {(!userId && !showSignUp) ? 
+        (<Fragment>
+          <Header onSignUp={() => setSignUpView(!showSignUp)} showSignUp={showSignUp} />
+          <Login setUserId={setUserId} saveUser={saveUser} />
+        </Fragment>) : 
+      (!userId && showSignUp) ?
+        (<Fragment>
+          <Header onSignUp={() => setSignUpView(!showSignUp)} showSignUp={showSignUp} />
+          <Signup setUserId={setUserId} saveUser={saveUser} />
+        </Fragment>) :   
+        (<Fragment>
+          <Header onAdd={() => setShowAddStock(!showAddStock)} showAdd={showAddStock} />
+          <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} />
+         </Fragment>) }
+      {
        (articles.length > 0) ? (
-          <Stocks
-           stocks={stocks}
+          <Articles
             articles={articles}
-           onDelete={deleteStock}
+            addArticle={addArticle}
           />
-       ) : (
-          'Click Search to find the latest news on the input stock. Ten of the most recent news articles will be compiled, summarized, and analyzed for sentiment. Use this information to become a smarter trader!'
-        )
-        }
+       ) : <div></div>
+      //   <UserArticles
+      //   userArticles={userArticles}
+      //   deleteArticle={deleteArticle}
+      // />
+      }
       </>
     )
   }
