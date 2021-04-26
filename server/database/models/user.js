@@ -23,5 +23,6 @@ const User = sequelize.define('user', {
 });
 
 User.hasMany(Article);
+User.sync();
 
 module.exports.User = User;

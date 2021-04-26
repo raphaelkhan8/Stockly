@@ -28,15 +28,16 @@ const Article = sequelize.define('article', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    user: {
+    userId: {
         type: Sequelize.INTEGER,
         references: 'users',
         referencesKey: 'id'
     }
     }, {
-    freezeTableName: true,
-    timeStamps: true,
+        freezeTableName: true,
+        timeStamps: true,
 });
 
+Article.sync();
 
 module.exports.Article = Article;

@@ -1,16 +1,15 @@
 require('dotenv').config({path:__dirname+'/./../../.env'});
 const Sequelize = require('sequelize');
 
-const { dbName, dbHost, dbPort, dbUser, dbPass } = process.env;
+const { DATABASE_URL } = process.env;
 
-console.log(dbPort);
-console.log(typeof dbPort);
-
-const sequelize = new Sequelize(dbName, dbUser, dbPass, {
-    host: dbHost,
+const sequelize = new Sequelize(DATABASE_URL, {
     dialect: 'postgres',
-    ssl: { 
-        rejectUnauthorized: false
+    protocol: 'postgres',
+    dialectOptions: {
+        ssl: {
+            rejectUnauthorized: false
+        }
     }
 });
 
