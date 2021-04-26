@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react'
-import Header from './Header'
-import socketIoClient from 'socket.io-client'
-let socket;
+import { useState } from 'react'
 
-const Login = ({ setUserId, saveUser }) => {
+const Login = ({ getUser, saveUser, showLogin }) => {
   
     const [userName, setName] = useState('');
     const [passWord, setPass] = useState('');
@@ -15,18 +12,22 @@ const Login = ({ setUserId, saveUser }) => {
         alert('Please enter both a username and password.')
         return;
       }
-  
-      saveUser({ userName, passWord })
+
+      (showLogin) ? getUser({ userName, passWord }) : saveUser( { userName, passWord })
   
       setName('');
       setPass('');
+    }
+
+    const displayView = (showLogin) => {
+        return (showLogin) ? 'Login' : 'Sign Me Up';
     }
 
     return (
       <>
         <form className='add-form' onSubmit={onSubmit}>
         <div className='form-control'>
-        <label>Login</label>
+        <label>{displayView(showLogin)}</label>
         <input
           type='text'
           placeholder='Username'
@@ -42,7 +43,7 @@ const Login = ({ setUserId, saveUser }) => {
         </div>
 
       <button type='submit' 
-        className='btn btn-block' >Login
+        className='btn btn-block' >{displayView(showLogin)}
       </button>
     </form>
       </>

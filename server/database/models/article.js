@@ -27,10 +27,17 @@ const Article = sequelize.define('article', {
     url: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    userId: {
+        type: Sequelize.INTEGER,
+        references: 'users',
+        referencesKey: 'id'
     }
     }, {
-    freezeTableName: true,
-    timeStamps: true,
+        freezeTableName: true,
+        timeStamps: true,
 });
+
+Article.sync();
 
 module.exports.Article = Article;

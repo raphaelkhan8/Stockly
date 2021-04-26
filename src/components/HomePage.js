@@ -1,17 +1,17 @@
 import { useState, useEffect, Fragment } from 'react'
 import Header from './Header'
 import Login from './Login'
-import Signup from './Signup'
 import Articles from './Articles'
 import UserArticles from './UserArticles'
 import SearchStock from './SearchStock'
 import socketIoClient from 'socket.io-client'
-let socket;
+
+let socket = socketIoClient("http://127.0.0.1:3001");
 
 const HomePage = () => {
 
-    const [userId, setUserId] = useState('');
-    const [showSignUp, setSignUpView] = useState(false); 
+    const [userId, setUserId] = useState(0);
+    const [showLogin, setLoginView] = useState(true);
     const [showAddStock, setShowAddStock] = useState(false);
     const [loading, setLoading] = useState(false);
     const [userArticles, setUserArticles] = useState([]);
@@ -20,7 +20,8 @@ const HomePage = () => {
     useEffect(() => {
       (()=> {
         let articles = [];
-        socket = socketIoClient("http://127.0.0.1:3001");
+        let userArticles = [];
+
         socket.on("data-ready", (data) => {
           setLoading(false)
           const parsedArrayData = JSON.parse(data);
@@ -37,12 +38,37 @@ const HomePage = () => {
           console.log("ART", articles);
           setArticles(articles);
         });
+
+        socket.on("user-saved", (data) => {
+          console.log(data);
+          (data[1] === false) ? 
+            alert(`Welcome back ${data[0].userName}. Logging in now`) : alert(`Account created. Welcome ${data[0].userName}. Logging in now`);
+          setUserId(data[0].id);
+          console.log(userId);
+        });
+
+        socket.on("user-retrieved", (data) => {
+          console.log('DATA FROM LOGIN', data);
+          if (!data.length) {
+            alert('Please enter a valid username and password');
+            return;
+          }
+          alert(`Welcome back ${data[0].userName}. Logging in now`)
+          setUserId(data[0].id)
+          console.log(userId);
+        });
+
       })()
     }, []);
 
-    const saveUser = async (userInfo) => {
-      console.log("SAVE user info", userInfo);
-      socket.emit("user-save", userInfo);
+    const saveUser = async (userInput) => {
+      console.log('SIGN UP VIEW');
+      socket.emit("user-save", userInput);
+    }
+
+    const getUser = async (userInput) => {
+      console.log('LOGIN VIEW');
+      socket.emit("get-user", userInput);
     }
   
     // Fetch All User's Stocks
@@ -72,19 +98,14 @@ const HomePage = () => {
 
     return (
       <>
-      {(!userId && !showSignUp) ? 
+      {(!userId) ? 
         (<Fragment>
-          <Header onSignUp={() => setSignUpView(!showSignUp)} showSignUp={showSignUp} />
-          <Login setUserId={setUserId} saveUser={saveUser} />
-        </Fragment>) : 
-      (!userId && showSignUp) ?
+          <Header onPress={() => setLoginView(!showLogin)} showLogin={showLogin} />
+          <Login getUser={getUser} saveUser={saveUser} showLogin={showLogin} />
+        </Fragment>) :  
         (<Fragment>
-          <Header onSignUp={() => setSignUpView(!showSignUp)} showSignUp={showSignUp} />
-          <Signup setUserId={setUserId} saveUser={saveUser} />
-        </Fragment>) :   
-        (<Fragment>
-          <Header onAdd={() => setShowAddStock(!showAddStock)} showAdd={showAddStock} />
-          <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} />
+          <Header onPress={() => setShowAddStock(!showAddStock)} showAdd={showAddStock} />
+          <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} userId={userId} />
          </Fragment>) }
       {
        (articles.length > 0) ? (
