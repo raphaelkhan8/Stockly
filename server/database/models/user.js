@@ -16,11 +16,6 @@ const User = sequelize.define('user', {
     passWord: {
         type: Sequelize.STRING,
         allowNull: false
-    },
-    article: {
-        type: Sequelize.INTEGER,
-        references: 'articles',
-        referencesKey: 'id'
     }
     }, {
     freezeTableName: true,
