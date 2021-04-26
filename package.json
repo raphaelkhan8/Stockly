@@ -29,7 +29,7 @@
     "server": "cd server && node index.js",
     "client": "react-scripts start",
     "client-build": "react-scripts build",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client-build\""
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {
