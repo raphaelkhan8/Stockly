@@ -4,22 +4,33 @@ const { Article } = require('../database/models/article');
 
 /// USERS ///
 
-const saveUser = async (userInfo) => {
+const saveUser = async (userInput) => {
     try {
-        const newUser = new User(userInfo);
-        await newUser.save();
-        return newUser;
+        const { userName, passWord } = userInput;
+        const [user, created] = await User.findOrCreate({
+            where: { userName },
+            defaults: {
+                userName,
+                passWord
+            }
+        });
+        console.log(user);
+        console.log(created);
+        return [ user.dataValues, created ];
     } catch(error) {  
         console.error(error);
     }
 }
 
-const getUser = async (userId) => {
+const getUser = async (userInput) => {
     try {
+        const { userName, passWord } = userInput;
         const user = await User.findAll({
         where: {
-            id: userId
+            userName,
+            passWord
         }});
+        console.log(user);
         return user;
     } catch(error) {
         console.error(error);
