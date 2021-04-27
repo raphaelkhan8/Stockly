@@ -3,14 +3,13 @@ import { Spinner } from 'react-bootstrap'
 import TextLoop from "react-text-loop";
 
 const SearchStock = ({ searchStock, loading, userId }) => {
-  console.log('USER', userId);
   const [ticker, setText] = useState('')
 
   const onSubmit = (e) => {
     console.log('Clicked');
     e.preventDefault()
 
-    if (!ticker) {
+    if (!ticker || ticker.length > 10) {
       alert('Please enter a ticker symbol')
       return
     }
