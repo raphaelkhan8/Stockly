@@ -24,20 +24,18 @@ io.on("connection", (socket) => {
 
   // Save user in database
   socket.on("user-save", async (userInfo) => {
-    console.log(userInfo);
     const savedUser = await saveUser(userInfo);
     socket.emit("user-saved", savedUser);
   })
 
-  // Get user from database
+  // Get user and their saved articles from database
   socket.on("get-user", async (userInfo) => {
-    console.log(userInfo);
+    let userArticles = [];
     const retrievedUser = await getUser(userInfo);
     if (retrievedUser.length) {
-      const userArticles = await getArticles(retrievedUser[0].dataValues.id);
-      console.log('USER ARTICLES', userArticles);
+      userArticles = await getArticles(retrievedUser[0].dataValues.id);
     }
-    socket.emit("user-retrieved", retrievedUser);
+    socket.emit("user-retrieved", [retrievedUser[0], userArticles]);
   })
 
   // Fetch article summarizations/sentiment analysis
@@ -49,10 +47,14 @@ io.on("connection", (socket) => {
 
   // Save article in database
   socket.on("article-save", async (articleInfo) => {
-    console.log(articleInfo);
     const savedArticle = await saveArticle(articleInfo);
-    // const stringifiedSaveArt = savedArticle.toString();
     socket.emit("article-saved", savedArticle);
+  });
+
+  // Delete article from database
+  socket.on("delete-article", async (article) => {
+    const remainingArticles = await deleteArticle(article);
+    socket.emit("article-deleted", remainingArticles);
   });
 
   socket.on('disconnection', () => {

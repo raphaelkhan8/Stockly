@@ -4,7 +4,8 @@ const UserArticles = ({ userArticles, deleteArticle }) => {
   return (
     <>
     <h2>Saved Articles</h2>
-      {userArticles.map((article, index) => (
+    {
+      userArticles.map((article) => (
         <div className='stock'>
         <h3>
           Ticker: {article.symbol.toUpperCase()}{' '}

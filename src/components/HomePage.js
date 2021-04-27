@@ -20,7 +20,6 @@ const HomePage = () => {
     useEffect(() => {
       (()=> {
         let articles = [];
-        let userArticles = [];
 
         socket.on("data-ready", (data) => {
           setLoading(false)
@@ -34,7 +33,6 @@ const HomePage = () => {
             obj.url = article[4];
             articles.push(obj);
           });
-          console.log("ART", articles);
           setArticles(articles);
         });
 
@@ -47,13 +45,30 @@ const HomePage = () => {
         });
 
         socket.on("user-retrieved", (data) => {
-          console.log('DATA FROM LOGIN', data);
           if (!data.length) {
             alert('Please enter a valid username and password');
             return;
           }
           alert(`Welcome back ${data[0].userName}. Logging in now`)
           setUserId(data[0].id);
+          setUserArticles(data[1]);
+        });
+
+        socket.on("article-saved", (data) => {
+          if (!data.id) {
+            alert('The article was unable to be saved');
+            return;
+          }
+          alert(`The article and its info were saved`);
+          articles = articles.filter(article => article.url !== data.url);
+          setArticles(articles);
+          setUserArticles([data]);
+        });
+
+        socket.on("article-deleted", (data) => {
+          console.log('Remaining Articles After Deletion', data);
+          alert(`The article and its info were deleted`)
+          setUserArticles(data);
         });
 
       })()
@@ -67,12 +82,6 @@ const HomePage = () => {
     const getUser = async (userInput) => {
       console.log('LOGIN VIEW');
       socket.emit("get-user", userInput);
-    }
-  
-    // Fetch All User's Stocks
-    const fetchStocks = async (userId) => {
-      console.log("FETCH user's articles", userId);
-      socket.emit("userStocks-fetch", userId);
     }
   
     // Send ticker to back-end
@@ -90,9 +99,9 @@ const HomePage = () => {
     }
   
     // Delete Stock
-    const deleteArticle = async (id) => {
-      console.log("DELETE id", id);
-      socket.emit("delete-article", id);
+    const deleteArticle = async (article) => {
+      console.log("DELETE id", article);
+      socket.emit("delete-article", article);
     }
 
     return (
@@ -104,14 +113,12 @@ const HomePage = () => {
           <p>Enter a stock or crypto ticker to find the latest news. Ten of the most recent news articles on the ticker will be compiled, summarized, and analyzed for sentiment. Use this information to become a smarter trader!</p>
         </Fragment>) :  
         (<Fragment>
-          <Header onPress={() => setShowAddStock(!showAddStock)} showAdd={showAddStock} />
+          <Header onPress={() => setShowAddStock(!showAddStock)} showAdd={showAddStock} loading={loading} />
           <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} userId={userId} />
-          {(userArticles.length) ? 
+          {(userArticles.length && !articles.length) ? 
               <UserArticles userArticles={userArticles} deleteArticle={deleteArticle} userId={userId} /> :
+              (articles.length) ? <Articles articles={articles} saveArticle={saveArticle} /> :
               <div>You do not have any saved articles. Search for ticker to find articles and sentiment around the input stock. Save that information if you'd like.</div>
-          }
-          {(articles.length) ? 
-              <Articles articles={articles} saveArticle={saveArticle} /> : <div></div>
           }
         </Fragment>)}
       </>

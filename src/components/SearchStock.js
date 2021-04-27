@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import TextLoop from "react-text-loop";
 
-const SearchStock = ({ searchStock, loading }) => {
+const SearchStock = ({ searchStock, loading, userId }) => {
+  console.log('USER', userId);
   const [ticker, setText] = useState('')
 
   const onSubmit = (e) => {
+    console.log('Clicked');
     e.preventDefault()
 
     if (!ticker) {
@@ -27,12 +29,12 @@ const SearchStock = ({ searchStock, loading }) => {
           placeholder={loading ? 'Fetching data...this will take a few minutes' : 'Stock or Cryto ticker symbol'}
           value={ticker}
           onChange={(e) => setText(e.target.value)}
-          disabled={loading ? true : false }
+          disabled={loading ? true : false}
         />
       </div>
 
-      <button type='submit' 
-        className='btn btn-block' > {loading ?
+      <button type='submit' disabled={loading ? true : false} className='btn btn-block' > 
+      {loading ?
           (<Spinner animation="border" variant="light" role="status"><span className="sr-only">
             <TextLoop interval={20000}>
               <div>Searching for stock news...</div>
@@ -42,8 +44,9 @@ const SearchStock = ({ searchStock, loading }) => {
               <div>Gathering results...</div>
             </TextLoop>
             </span>
-            </Spinner>)
-          :'Search Stock'} </button>
+          </Spinner>)
+        :'Search Stock'}
+      </button>
     </form>
   )
 }
