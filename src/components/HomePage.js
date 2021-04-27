@@ -45,7 +45,7 @@ const HomePage = () => {
         });
 
         socket.on("user-retrieved", (data) => {
-          if (!data.length) {
+          if (!data[0]) {
             alert('Please enter a valid username and password');
             return;
           }
