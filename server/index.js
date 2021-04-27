@@ -47,8 +47,8 @@ io.on("connection", (socket) => {
 
   // Save article in database
   socket.on("article-save", async (articleInfo) => {
-    const savedArticle = await saveArticle(articleInfo);
-    socket.emit("article-saved", savedArticle);
+    const savedArticles = await saveArticle(articleInfo);
+    socket.emit("article-saved", savedArticles);
   });
 
   // Delete article from database

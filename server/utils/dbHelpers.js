@@ -57,7 +57,8 @@ const saveArticle = async (articleInfo) => {
     try {
         const newArticle = new Article(articleInfo);
         await newArticle.save();
-        return newArticle;
+        const allArticles = await getArticles(articleInfo.userId);
+        return allArticles;
     } catch(error) {  
         console.error(error)
     }
@@ -77,13 +78,11 @@ const deleteArticle = async ({ id, userId }) => {
 }
 
 const getArticles = async (userId) => {
-    console.log('USER ID ==========', userId);
     try {
         const articles = await Article.findAll({
         where: {
             userId
         }});
-        console.log(articles);
         return articles;
     } catch(error) {
         console.error(error);

@@ -55,18 +55,17 @@ const HomePage = () => {
         });
 
         socket.on("article-saved", (data) => {
-          if (!data.id) {
+          if (!data.length) {
             alert('The article was unable to be saved');
             return;
           }
           alert(`The article and its info were saved`);
-          articles = articles.filter(article => article.url !== data.url);
+          articles = articles.filter(article => article.url !== data[data.length - 1].url);
           setArticles(articles);
-          setUserArticles([data]);
+          setUserArticles(data);
         });
 
         socket.on("article-deleted", (data) => {
-          console.log('Remaining Articles After Deletion', data);
           alert(`The article and its info were deleted`)
           setUserArticles(data);
         });
@@ -75,18 +74,15 @@ const HomePage = () => {
     }, []);
 
     const saveUser = async (userInput) => {
-      console.log('SIGN UP VIEW');
       socket.emit("user-save", userInput);
     }
 
     const getUser = async (userInput) => {
-      console.log('LOGIN VIEW');
       socket.emit("get-user", userInput);
     }
   
     // Send ticker to back-end
     const searchStock = async ({ ticker }) => {
-      console.log("SEARCH ticker", ticker);
       setLoading(true);
       socket.emit("data-fetch", ticker);
     }
@@ -94,13 +90,11 @@ const HomePage = () => {
     // Save Article
     const saveArticle = async (articleInfo) => {
       const articleWithUserId = Object.assign(articleInfo, { userId });
-      console.log("SAVE article", articleWithUserId);
       socket.emit("article-save", articleWithUserId);
     }
   
     // Delete Stock
     const deleteArticle = async (article) => {
-      console.log("DELETE id", article);
       socket.emit("delete-article", article);
     }
 
@@ -114,11 +108,17 @@ const HomePage = () => {
         </Fragment>) :  
         (<Fragment>
           <Header onPress={() => setShowAddStock(!showAddStock)} showAdd={showAddStock} loading={loading} />
-          <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} userId={userId} />
-          {(userArticles.length && !articles.length) ? 
-              <UserArticles userArticles={userArticles} deleteArticle={deleteArticle} userId={userId} /> :
-              (articles.length) ? <Articles articles={articles} saveArticle={saveArticle} /> :
-              <div>You do not have any saved articles. Search for ticker to find articles and sentiment around the input stock. Save that information if you'd like.</div>
+          {showAddStock ? 
+            (<Fragment>
+              <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} userId={userId} />
+              {(articles.length) ? 
+                (<Articles articles={articles} saveArticle={saveArticle} />) :
+                <div>Search for a ticker to find summarized articles and sentiment analysis on the input stock. Save that information if you'd like.</div>
+              }
+            </Fragment>) :
+            (userArticles.length) ? 
+            <UserArticles userArticles={userArticles} deleteArticle={deleteArticle} userId={userId} /> : 
+            <div>You do not have any saved articles. Search for a ticker to find summarized articles and sentiment analysis on the input stock. Save that information if you'd like.</div>
           }
         </Fragment>)}
       </>
