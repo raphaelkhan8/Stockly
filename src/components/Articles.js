@@ -3,6 +3,7 @@ import { FaSave } from 'react-icons/fa'
 const Articles = ({ articles, saveArticle }) => {
   return (
     <>
+    {console.log('ART from Articles component', articles)}
       {articles.map((article) => (
         <div className='stock'>
         <h3>

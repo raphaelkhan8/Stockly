@@ -3,7 +3,7 @@ const { sequelize } = require('../connection');
 
 const Article = sequelize.define('article', {
     id: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
@@ -30,8 +30,10 @@ const Article = sequelize.define('article', {
     },
     userId: {
         type: Sequelize.INTEGER,
-        references: 'users',
-        referencesKey: 'id'
+        references: {
+            model: 'user',
+            key: 'id'
+        }
     }
     }, {
         freezeTableName: true,

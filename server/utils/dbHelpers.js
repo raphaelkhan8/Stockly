@@ -1,17 +1,20 @@
 const { User } = require('../database/models/user');
 const { Article } = require('../database/models/article');
-
+const bcrypt = require("bcryptjs");
 
 /// USERS ///
 
 const saveUser = async (userInput) => {
     try {
         const { userName, passWord } = userInput;
+        // const salt = bcrypt.genSaltSync(10);
+        // const hash = bcrypt.hashSync(passWord, salt);
         const [user, created] = await User.findOrCreate({
             where: { userName },
             defaults: {
                 userName,
                 passWord
+                // passWord: hash
             }
         });
         return { 'userInfo': user.dataValues, 'created': created };
@@ -60,13 +63,14 @@ const saveArticle = async (articleInfo) => {
     }
 }
 
-const deleteArticle = async (articleId) => {
+const deleteArticle = async ({ id, userId }) => {
     try {
-        const deletedArticle = await Article.destroy({
+        await Article.destroy({
         where: {
-            id: articleId
+            id
         }});
-        return deletedArticle;
+        const remainingArticles = await getArticles(userId);
+        return remainingArticles;
     } catch(error) {
         console.error(error);
     }
