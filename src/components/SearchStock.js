@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Spinner } from 'react-bootstrap'
-import TextLoop from "react-text-loop";
+import TextLoop from "react-text-loop"
+import Swal from "sweetalert2"
 
 const SearchStock = ({ searchStock, loading, userId }) => {
   const [ticker, setText] = useState('')
@@ -10,7 +11,7 @@ const SearchStock = ({ searchStock, loading, userId }) => {
     e.preventDefault()
 
     if (!ticker || ticker.length > 10) {
-      alert('Please enter a ticker symbol')
+      Swal.fire('Please enter a ticker symbol')
       return
     }
 

@@ -12,6 +12,10 @@ const Article = sequelize.define('article', {
         type: Sequelize.STRING,
         allowNull: false
     },
+    time: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     summary: {
         type: Sequelize.STRING,
         allowNull: false

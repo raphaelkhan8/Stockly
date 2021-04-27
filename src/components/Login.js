@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Swal from "sweetalert2";
 
 const Login = ({ getUser, saveUser, showLogin }) => {
   
@@ -9,7 +10,7 @@ const Login = ({ getUser, saveUser, showLogin }) => {
       e.preventDefault()
   
       if (!userName || !passWord) {
-        alert('Please enter both a username and password.')
+        Swal.fire('Please enter both a username and password.')
         return;
       }
 

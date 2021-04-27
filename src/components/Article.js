@@ -18,6 +18,7 @@ const Article = ({ article, saveArticle, deleteArticle, origin }) => {
                 onClick={() => deleteArticle(article)}
           />}
         </h3>
+        <p><b>Time:</b> {article.time}</p>
         <p><b>Summary:</b> {article.summary}</p>
         <p><b>Sentiment:</b> {article.sentiment}</p>
         <p><b>Score:</b> {article.score}</p>

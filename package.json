@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^4.6.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -22,11 +23,12 @@
     "sequelize": "^6.6.2",
     "socket.io": "^4.0.1",
     "socket.io-client": "^4.0.1",
+    "sweetalert2": "^10.16.6",
     "uuidv4": "^6.2.7",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
-    "server": "cd server && node index.js",
+    "server": "cd server && nodemon index.js",
     "client": "react-scripts start",
     "client-build": "react-scripts build",
     "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client-build\""
