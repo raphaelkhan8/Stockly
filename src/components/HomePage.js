@@ -1,4 +1,5 @@
 import { useState, useEffect, Fragment } from 'react'
+import Swal from 'sweetalert2'
 import Header from './Header'
 import Login from './Login'
 import Articles from './Articles'
@@ -27,10 +28,11 @@ const HomePage = () => {
           parsedArrayData.forEach((article) => {
             let obj = {};
             obj.symbol = article[0];
-            obj.summary = article[1];
-            obj.sentiment = article[2];
-            obj.score = article[3];
-            obj.url = article[4];
+            obj.time = article[1];
+            obj.summary = article[2];
+            obj.sentiment = article[3];
+            obj.score = article[4];
+            obj.url = article[5];
             articles.push(obj);
           });
           setArticles(articles);
@@ -39,34 +41,34 @@ const HomePage = () => {
         socket.on("user-saved", (data) => {
           const { userName, id } = data.userInfo;
           (data.created === false) ? 
-            alert(`Welcome back ${userName}. Logging in now`) : 
-            alert(`Account created. Welcome ${userName}. Logging in now`);
+            Swal.fire(`Welcome back ${userName}!`) : 
+            Swal.fire(`Account created. Welcome ${userName}!`);
           setUserId(id);
         });
 
         socket.on("user-retrieved", (data) => {
           if (!data[0]) {
-            alert('Please enter a valid username and password');
+            Swal.fire('Please enter a valid username and password');
             return;
           }
-          alert(`Welcome back ${data[0].userName}. Logging in now`)
+          Swal.fire(`Welcome back ${data[0].userName}!`)
           setUserId(data[0].id);
           setUserArticles(data[1]);
         });
 
         socket.on("article-saved", (data) => {
           if (!data.length) {
-            alert('The article was unable to be saved');
+            Swal.fire('The article was unable to be saved');
             return;
           }
-          alert(`The article and its info were saved`);
+          Swal.fire(`The article was saved`);
           articles = articles.filter(article => article.url !== data[data.length - 1].url);
           setArticles(articles);
           setUserArticles(data);
         });
 
         socket.on("article-deleted", (data) => {
-          alert(`The article and its info were deleted`)
+          Swal.fire(`The article was deleted`)
           setUserArticles(data);
         });
 
@@ -95,7 +97,22 @@ const HomePage = () => {
   
     // Delete Stock
     const deleteArticle = async (article) => {
-      socket.emit("delete-article", article);
+      Swal.fire({
+        title: 'Are you sure you want to delete this article?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Delete'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        socket.emit("delete-article", article);
+        // Swal.fire('Your entire team quit :('
+        // ).then(() => {
+        //     window.location.reload(false);
+        // })
+      }})
     }
 
     return (
