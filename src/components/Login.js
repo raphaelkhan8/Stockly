@@ -19,9 +19,19 @@ const Login = ({ getUser, saveUser, showLogin }) => {
       setPass('');
     }
 
+    const togglePass = () => {
+        let x = document.getElementById("inputPass");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+
     const displayView = (showLogin) => {
         return (showLogin) ? 'Login' : 'Sign Me Up';
     }
+
 
     return (
       <>
@@ -35,12 +45,14 @@ const Login = ({ getUser, saveUser, showLogin }) => {
           onChange={(e) => setName(e.target.value)}
         />
         <input
-          type='text'
+          id="inputPass"
+          type='password'
           placeholder='Password'
           value={passWord}
           onChange={(e) => setPass(e.target.value)}
         />
         </div>
+        <input type="checkbox" onClick={togglePass} />Show Password
 
       <button type='submit' 
         className='btn btn-block' >{displayView(showLogin)}
