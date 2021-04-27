@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 
-const About = () => {
+const Logout = () => {
   return (
     <div>
-      <h4>Version 1.0.0</h4>
-      <Link to='/'>Go Back</Link>
+      <h4>Thanks for using Stockly!</h4>
+      <Link to='/'>Logout</Link>
     </div>
   )
 }
 
-export default About
+export default Logout
