@@ -2,6 +2,7 @@
 from transformers import PegasusTokenizer, PegasusForConditionalGeneration
 from bs4 import BeautifulSoup
 from transformers import pipeline
+from datetime import datetime
 import sys, json, csv, re, requests
 import json
 
@@ -74,11 +75,14 @@ scores = {ticker:sentiment(summaries[ticker]) for ticker in monitored_tickers}
 # # 6. Exporting Results
 # print('Exporting results')
 def create_output_array(summaries, scores, urls):
+    now = datetime.now()
+    formattedTime = now.strftime("%B %d, %Y %H:%M:%S")
     output = []
     for ticker in monitored_tickers:
         for counter in range(len(summaries[ticker])):
             output_this = [
                 ticker,
+                formattedTime,
                 summaries[ticker][counter],
                 str(scores[ticker][counter]['label']),
                 scores[ticker][counter]['score'],
