@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import Button from './Button'
 
-const Header = ({ title, showLogin, onPress, showAdd }) => {
+const Header = ({ title, showLogin, onPress, showAdd, loading }) => {
   const location = useLocation()
 
   return (
@@ -15,6 +15,7 @@ const Header = ({ title, showLogin, onPress, showAdd }) => {
           onClick={onPress}
         /> :
         <Button
+          disabled={loading ? true : false}
           color={showAdd ? 'red' : 'green'}
           text={showAdd ? 'Cancel' : 'Search'}
           onClick={onPress}
