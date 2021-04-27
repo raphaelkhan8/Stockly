@@ -14,9 +14,7 @@ const saveUser = async (userInput) => {
                 passWord
             }
         });
-        console.log(user);
-        console.log(created);
-        return [ user.dataValues, created ];
+        return { 'userInfo': user.dataValues, 'created': created };
     } catch(error) {  
         console.error(error);
     }
@@ -30,7 +28,6 @@ const getUser = async (userInput) => {
             userName,
             passWord
         }});
-        console.log(user);
         return user;
     } catch(error) {
         console.error(error);
@@ -75,9 +72,24 @@ const deleteArticle = async (articleId) => {
     }
 }
 
+const getArticles = async (userId) => {
+    console.log('USER ID ==========', userId);
+    try {
+        const articles = await Article.findAll({
+        where: {
+            userId
+        }});
+        console.log(articles);
+        return articles;
+    } catch(error) {
+        console.error(error);
+    }
+}
+
 
 module.exports.saveUser = saveUser;
 module.exports.getUser = getUser;
 module.exports.deleteUser = deleteUser;
 module.exports.saveArticle = saveArticle;
 module.exports.deleteArticle = deleteArticle;
+module.exports.getArticles = getArticles;

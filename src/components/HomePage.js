@@ -25,9 +25,8 @@ const HomePage = () => {
         socket.on("data-ready", (data) => {
           setLoading(false)
           const parsedArrayData = JSON.parse(data);
-          parsedArrayData.forEach((article, i) => {
+          parsedArrayData.forEach((article) => {
             let obj = {};
-            obj.id = i++;
             obj.symbol = article[0];
             obj.summary = article[1];
             obj.sentiment = article[2];
@@ -40,11 +39,11 @@ const HomePage = () => {
         });
 
         socket.on("user-saved", (data) => {
-          console.log(data);
-          (data[1] === false) ? 
-            alert(`Welcome back ${data[0].userName}. Logging in now`) : alert(`Account created. Welcome ${data[0].userName}. Logging in now`);
-          setUserId(data[0].id);
-          console.log(userId);
+          const { userName, id } = data.userInfo;
+          (data.created === false) ? 
+            alert(`Welcome back ${userName}. Logging in now`) : 
+            alert(`Account created. Welcome ${userName}. Logging in now`);
+          setUserId(id);
         });
 
         socket.on("user-retrieved", (data) => {
@@ -54,8 +53,7 @@ const HomePage = () => {
             return;
           }
           alert(`Welcome back ${data[0].userName}. Logging in now`)
-          setUserId(data[0].id)
-          console.log(userId);
+          setUserId(data[0].id);
         });
 
       })()
@@ -84,10 +82,11 @@ const HomePage = () => {
       socket.emit("data-fetch", ticker);
     }
   
-    // Add Article
-    const addArticle = async (articleInfo) => {
-      console.log("SAVE article", articleInfo);
-      socket.emit("article-save", articleInfo);
+    // Save Article
+    const saveArticle = async (articleInfo) => {
+      const articleWithUserId = Object.assign(articleInfo, { userId });
+      console.log("SAVE article", articleWithUserId);
+      socket.emit("article-save", articleWithUserId);
     }
   
     // Delete Stock
@@ -102,23 +101,19 @@ const HomePage = () => {
         (<Fragment>
           <Header onPress={() => setLoginView(!showLogin)} showLogin={showLogin} />
           <Login getUser={getUser} saveUser={saveUser} showLogin={showLogin} />
+          <p>Enter a stock or crypto ticker to find the latest news. Ten of the most recent news articles on the ticker will be compiled, summarized, and analyzed for sentiment. Use this information to become a smarter trader!</p>
         </Fragment>) :  
         (<Fragment>
           <Header onPress={() => setShowAddStock(!showAddStock)} showAdd={showAddStock} />
           <SearchStock searchStock={searchStock} loading={loading} setLoading={setLoading} userId={userId} />
-         </Fragment>) }
-      {
-       (articles.length > 0) ? (
-          <Articles
-            articles={articles}
-            addArticle={addArticle}
-          />
-       ) : <div></div>
-      //   <UserArticles
-      //   userArticles={userArticles}
-      //   deleteArticle={deleteArticle}
-      // />
-      }
+          {(userArticles.length) ? 
+              <UserArticles userArticles={userArticles} deleteArticle={deleteArticle} userId={userId} /> :
+              <div>You do not have any saved articles. Search for ticker to find articles and sentiment around the input stock. Save that information if you'd like.</div>
+          }
+          {(articles.length) ? 
+              <Articles articles={articles} saveArticle={saveArticle} /> : <div></div>
+          }
+        </Fragment>)}
       </>
     )
   }

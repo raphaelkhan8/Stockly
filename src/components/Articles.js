@@ -1,16 +1,16 @@
 import { FaSave } from 'react-icons/fa'
 
-const Articles = ({ articles, addArticle }) => {
+const Articles = ({ articles, saveArticle }) => {
   return (
     <>
-      {articles.map((article, index) => (
+      {articles.map((article) => (
         <div className='stock'>
         <h3>
           Ticker: {article.symbol.toUpperCase()}{' '}
           <FaSave
             style={{ color: 'green', cursor: 'pointer' }}
             title="Save"
-            onClick={() => addArticle(article)}
+            onClick={() => saveArticle(article)}
           />
         </h3>
         <p><b>Summary:</b> {article.summary}</p>
