@@ -19,12 +19,12 @@ You have installed PostgreSQL on your local machine. If not, you can install it 
 
 Fork this repository and clone it to your local machine. Open the project in an IDE to get started.
 
-Run `npm install` to install Node/React/database dependencies. Afterwards, run `pip install dependencies.txt` to install the Python dependencies.
+Run `npm install` to install Node/React/database dependencies. Afterwards, run `pip install -r requirements.txt` to install the Python dependencies.
 
 After all dependencies have been installed, open up another terminal. Run `npm run client` to get the front-end running. This will open the app in the browser.
 
 ## Development server
-In order to start the server, you will need PostgreSQL installed on your machine and a .env file with the database connection string:
+In order to start the server, you will need PostgreSQL installed on your machine and a .env file (in the root directory) with the database connection string:
 
 + DATABASE_URL=postgres://[username]:[password]@[host]:5432/[database_name]
 [database_name] = 'whatever name you'd like to give to the database'
