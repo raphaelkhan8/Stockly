@@ -1,7 +1,7 @@
 # Stockly
 An app to find summarized articles and sentiment analysis on current stock news. Create an account to save this information if you'd like.  
 
-<img align="left" title="Login page" src="https://stockly7.s3.amazonaws.com/login.JPG" height="370" width="285">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img align="center" margin-left="10px" title="Returns one-line article summary + sentiment analysis" src="https://stockly7.s3.amazonaws.com/returned+articles.JPG" height="370" width="285"><img align="right" title="Save interesting articles!" src="https://stockly7.s3.amazonaws.com/savedarticles.JPG" height="370" width="260">
+<img align="left" title="Login page" src="https://stockly7.s3.amazonaws.com/login.JPG" height="370" width="285">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img align="center" margin-left="10px" title="Returns one-line article summary + sentiment analysis" src="https://stockly7.s3.amazonaws.com/returned+articles.JPG" height="370" width="285"><img align="right" title="Save interesting articles!" src="https://stockly7.s3.amazonaws.com/savedarticles.JPG" height="370" width="260">
 
 ## Getting Started
 The following instructions will allow you to get a copy of this project running on your local machine:
@@ -17,12 +17,11 @@ python: `https://www.python.org/downloads/`
 You have installed PostgreSQL on your local machine. If not, you can install it golbally by running the following command:
 `npm install -g pg`
 
-Fork this repository and clone them to your local machine. Open the project in an IDE and you will find two repos: client and server.
+Fork this repository and clone it to your local machine. Open the project in an IDE to get started.
 
-In two seperate terminals, Run `cd client` to move into the client repo and `cd server` to get into the server repo.
-In each terminal, run `npm install` to install dependencies. In the server terminal, run `pip install dependencies.txt` to install Python dependencies.
+Run `npm install` to install Node/React/database dependencies. Afterwards, run `pip install dependencies.txt` to install the Python dependencies.
 
-After dependencies have been installed, run `npm run client` in the client terminal to get the front-end running. This will open the app in the browser.
+After all dependencies have been installed, open up another terminal. Run `npm run client` to get the front-end running. This will open the app in the browser.
 
 ## Development server
 In order to start the server, you will need PostgreSQL installed on your machine and a .env file with the database connection string:
@@ -34,7 +33,7 @@ In order to start the server, you will need PostgreSQL installed on your machine
 [host] = 'localhost'
 [port] = 5432
 
-After the .env file is set up, run `npm run server` in the server terminal. To make sure it is running, open up the browser and go to `http://localhost:3001/home`. You should see an object with a "welcome to server" message.
+After the .env file is set up, run `npm run server` in the other terminal. To make sure it is running, open up the browser and go to `http://localhost:3001/home`. You should see an object with a "welcome to server" message.
 
 ## Using the app
 1. The landing page is the login view. Click the green Sinup button in the top right corner to create an account. Once created, you'll be directed to the app.
