@@ -46,6 +46,6 @@ After the .env file is set up, run `npm run server` in the other terminal. To ma
 
 * [React](https://reactjs.org/docs/create-a-new-react-app.html) - The web framework used
 * [Node.js](https://nodejs.org/en/docs/) - Server-side runtime environment
-* [Socket.io](https://expressjs.com/en/api.html) - Server-side framework 
+* [Socket.io](https://expressjs.com/en/api.html) - For bilateral communication between client and server
 * [PostgreSQL](https://expressjs.com/en/api.html) - RDBMS
 * [Python](https://www.python.org/) - To run sentiment analysis and summarization on stock news articles
