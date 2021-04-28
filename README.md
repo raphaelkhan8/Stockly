@@ -1,7 +1,7 @@
 # Stockly
 An app to find summarized articles and sentiment analysis on current stock news. Create an account to save this information if you'd like.  
 
-<img align="left" title="Login page" src="https://stockly7.s3.amazonaws.com/login.JPG" height="360" width="270"><img align="center" margin-left="10px" title="Returns one-line article summary + sentiment analysis" src="https://stockly7.s3.amazonaws.com/returned+articles.JPG" height="360" width="270"><img align="right" title="Save interesting articles!" src="https://stockly7.s3.amazonaws.com/savedarticles.JPG" height="360" width="270">
+<img align="left" title="Login page" src="https://stockly7.s3.amazonaws.com/login.JPG" height="360" width="260"><img align="center" margin-left="10px" title="Returns one-line article summary + sentiment analysis" src="https://stockly7.s3.amazonaws.com/returned+articles.JPG" height="360" width="260"><img align="right" title="Save interesting articles!" src="https://stockly7.s3.amazonaws.com/savedarticles.JPG" height="360" width="260">
 
 ## Getting Started
 The following instructions will allow you to get a copy of this project running on your local machine:
