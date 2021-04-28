@@ -7,7 +7,8 @@ import UserArticles from './UserArticles'
 import SearchStock from './SearchStock'
 import socketIoClient from 'socket.io-client'
 
-let socket = socketIoClient("http://127.0.0.1:3001");
+// let socket = socketIoClient("http://127.0.0.1:3001");
+let socket = socketIoClient("https://stockly7.herokuapp.com:51073");
 
 const HomePage = () => {
 

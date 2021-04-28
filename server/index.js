@@ -3,10 +3,10 @@ const cors = require("cors");
 const http = require("http");
 const socketIo = require("socket.io");
 const { callToPythonAsync } = require("./utils/serverHelpers");
-const { saveUser, getUser, getArticles, deleteUser, saveArticle, deleteArticle } = require("./utils/dbHelpers");
+const { saveUser, getUser, getArticles, saveArticle, deleteArticle } = require("./utils/dbHelpers");
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -63,7 +63,6 @@ io.on("connection", (socket) => {
 });
 
 server.listen(port, () => {
-  const host = server.address().address
-  const port = server.address().port
+  const host = server.address().address;
   console.log('App listening at http://%s:%s', host, port);
 });
