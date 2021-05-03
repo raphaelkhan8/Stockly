@@ -25,15 +25,34 @@ io.on("connection", (socket) => {
   // Save user in database
   socket.on("user-save", async (userInfo) => {
     const savedUser = await saveUser(userInfo);
+    const dateOb = new Date();
+    const authInfo = {
+      username: userInfo.userName,
+      date: dateOb.toLocaleDateString(),
+      time: formatAMPM(dateOb),
+    }
+    authInfo.firstTimeUser = savedUser.created; 
+    signInActivityLogger(authInfo, "signup");
     socket.emit("user-saved", savedUser);
   })
 
   // Get user and their saved articles from database
   socket.on("get-user", async (userInfo) => {
+    const dateOb = new Date();
+    const authInfo = {
+      username: userInfo.userName,
+      date: dateOb.toLocaleDateString(),
+      time: formatAMPM(dateOb)
+    }
     let userArticles = [];
     const retrievedUser = await getUser(userInfo);
     if (retrievedUser.length) {
+      authInfo.loggedIn = true
+      signInActivityLogger(authInfo, "login");
       userArticles = await getArticles(retrievedUser[0].dataValues.id);
+    } else {
+      authInfo.loggedIn = false;
+      signInActivityLogger(authInfo, "login");
     }
     socket.emit("user-retrieved", [retrievedUser[0], userArticles]);
   })
