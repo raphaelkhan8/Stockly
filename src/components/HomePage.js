@@ -108,10 +108,6 @@ const HomePage = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         socket.emit("delete-article", article);
-        // Swal.fire('Your entire team quit :('
-        // ).then(() => {
-        //     window.location.reload(false);
-        // })
       }})
     }
 
